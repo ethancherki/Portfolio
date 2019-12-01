@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Robotics Portfolio</title>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="topnav">
+      <a href="Resume.html">About Me</a>
+      <a href="Projects.html">Projects</a>
+      <a href="Contact.html">Contact</a>
+    </div>
+
+      <div class="project-title">
+        <div class="my-name">Perception and Navigation</div>
+        <div class="my-title"> Autonomous Car Navigation </div>
+
+        <div><img src="img/autonomouscar.jpg" class="image"></div>
+
+        <h1>About</h1>
+        <p>
+        This work was about implementing a navigation algorithm based on extended Kalman filter (EKF) for a land vehicle. We had access to a range of non-perfect sensors : a low-drift IMU with Gaussian noise and biais, a GPS with Gaussian noise and occasional biais and odometers with Gaussian noise.</p>
+
+
+        <h1>Goal</h1>
+        	<p>
+        	Find, analyse and test different models, starting from a simple one and complementing it to improve the estimation. </p>
+
+        <h1>Simplified Model</h1>
+
+
+        <h2>States, inputs and measures </h2>
+        <ul>
+        <li>
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mo>=</mo><mo>[</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>&#x3B8;</mi><mo>]</mo></math>
+        </li>
+        <li>
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi><mo>=</mo><mo>[</mo><msup><mi>V</mi><mo>*</mo></msup><mo>,</mo><msub><mi>&#x3C9;</mi><mi>IMU</mi></msub><mo>]</mo></math>
+        </li>
+        <li>
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>Z</mi><mo>=</mo><mo>[</mo><msub><mi>x</mi><mi>GPS</mi></msub><mo>,</mo><msub><mi>y</mi><mi>GPS</mi></msub><mo>]</mo></math>
+        </li>
+        </ul>
+
+
+        <h2>Equations</h2>
+        <ul>
+        <li>Only Gaussian noises are taken into account in this first model. </li>
+        <li>The vehicle&#39;s velocity is approximated by V</em>.</li>
+        </ul>
+
+
+        <img src="img/BE_Navigation/eq_model_1.png" width="400" alt="eq_model_1">
+
+        <h2>Estimation of the noise covariances Q and R </h2>
+        <p>We derived Q and R from the measurement noise &#39;s amplitude and from the error between output and input reference speed visible on the curves below. </p>
+
+        <p><img src="img/BE_Navigation/err_pos.png" class="image" alt="alt text"></p>
+        <p><img src="img/BE_Navigation/err_vit_mod1.png" class="image" alt="alt text"></p>
+        <p><img src="img/BE_Navigation/err_vitesse1.png" class="image" alt="alt text"></p>
+
+
+
+        <h2>Performance</h2>
+        <p>When simulating a non-biased-sensors vehicle, the estimation was almost optimal since all noises were white and covariances were approximately known.</p>
+        <p><img src="img/BE_Navigation/traj_mod1_gpssanssaut.png" class="image" alt="alt text"></p>
+        <p>Adding biases and drifts, the estimation was less precise.</p>
+        <p><img src="img/BE_Navigation/traj_mod1.png" class="image" alt="alt text"></p>
+
+
+
+        <h1>Model improvements</h1>
+        <p>We successively added several states and measures to observe the effects on the estimations.</p>
+      </br> To take into account the gyrometric bias, we added a new state b such as :
+        <div class="list"> <ul><li><math xmlns="http://www.w3.org/1998/Math/MathML"><mover><mi>&#x3B8;</mi><mo>&#x2D9;</mo></mover><mo>=</mo><msub><mi>&#x3C9;</mi><mi>IMU</mi></msub><mo>+</mo><msub><mi>v</mi><mi>&#x3B8;</mi></msub></math> </li>
+        <li><math xmlns="http://www.w3.org/1998/Math/MathML"><mover><mi>b</mi><mo>&#x2D9;</mo></mover><mo>=</mo><msub><mi>v</mi><mi>b</mi></msub></math> </li>
+      </ul> </div>
+
+    </br>
+        <p>We added V as a new state so that both first equations are not uncertain annymore.</p>
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mover><mi>V</mi><mo>&#x2D9;</mo></mover><mo>=</mo><mfrac><mn>1</mn><mi>&#x3C4;</mi></mfrac><mo>(</mo><mi>V</mi><mo>-</mo><msup><mi>V</mi><mo>*</mo></msup><mo>)</mo></math>
+
+
+      </br>
+      To make the estimation on V easier, we used the measures from the odometers :
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>V</mi><mi>ODO</mi></msub><mo>=</mo><mi>V</mi><mo>+</mo><msub><mi>w</mi><mi>V</mi></msub></math>
+
+      </br>In a same way, to make the estimation on the bias easier, we used the measures from the odometers :
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>&#x3C9;</mi><mi>ODO</mi></msub><mo>-</mo><msub><mi>&#x3C9;</mi><mi>IMU</mi></msub><mo>=</mo><mo>-</mo><mi>b</mi><mo>+</mo><msub><mi>w</mi><mi>V</mi></msub></math>
+
+
+
+
+        <h1>Final Model </h1>
+
+
+        <h2>States, inputs and measures </h2>
+        <ul>
+        <li>
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>X</mi><mo>=</mo><mo>[</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>&#x3B8;</mi><mo>,</mo><mi>b</mi><mo>]</mo></math></li>
+        <li><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>U</mi><mo>=</mo><mo>[</mo><mi>V</mi><mo>,</mo><msub><mi>&#x3C9;</mi><mi>IMU</mi></msub><mo>]</mo></math></li>
+        <li><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>Z</mi><mo>=</mo><mo>[</mo><msub><mi>x</mi><mi>GPS</mi></msub><mo>,</mo><msub><mi>y</mi><mi>GPS</mi></msub><mo>,</mo><msub><mi>&#x3C9;</mi><mi>ODO</mi></msub><mo>,</mo><msub><mi>V</mi><mi>ODO</mi></msub><mo>]</mo></math></li>
+        </ul>
+        <h2>Equations</h2>
+        <ul>
+        <li>Only Gaussian noises are taken into account in this first model. </li>
+        <li>The vehicle&#39;s velocity is approximated by V*.</li>
+        </ul>
+
+        <img src="img/BE_Navigation/eq_model_6.png" width="350" alt="eq_model_6">
+
+        <h2>Estimation of the noise covariances Q and R </h2>
+        <p>We derived the noise covariance on b state from the maximum value of the low-frequency error on the orientation. </p>
+        <h2>Performance on the simulation with non-perfect sensors</h2>
+        Drifts and biases were better rejected which resulted in smaller errors on the estimation.
+        <p><img src="img/BE_Navigation/traj_mod6.png" class="image" alt="alt text"></p>
+
+
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>
