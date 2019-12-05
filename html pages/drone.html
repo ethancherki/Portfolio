@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Robotics Portfolio</title>
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="topnav">
+      <a href="Resume.html">About Me</a>
+      <a href="Projects.html">Robotics Projects</a>
+      <a href="Contact.html">Contact</a>
+    </div>
+
+      <div class="project-title">
+        <div class="my-name">UAVs</div>
+        <div class="my-title"> Guidance and Navigation software design for a quadcopter</div>
+
+        <div><img src="img/Bebop.jpg" class="image"></div>
+
+        <h1>Introduction</h1>
+        Implementing control laws and higher-level mission control for drones requires working in a simulation
+        environment but this test alone is not sufficient: real word testing is also needed. This was the core
+        of this project during which we had to both simulate and make real tests on a Bebop drone. Middleware softwares such as ROS
+        made the transition easier by enabling Wi-fi connection between different computers together
+        with the drone.
+
+          <img src="img/BE_Drone/SimoDrones.png" class="image" alt="Drone simulation">
+
+          <h1> Goals</h1>
+          Given a simulation environment, we had to build outer loop controllers (position controllers) to respect
+          performance specifications on a drone preparatorily stabilized with cascade control. We tested
+          those controllers by giving a set of waypoints for the drone to follow.
+
+          </br> </br> The second part of this course was to implement a fully autonomous chasing-off-intruder mission.
+
+          <h1> Implementing position controllers </h1>
+
+          <h2> Modal control method </h2>
+          We used a modal control method on each axis to get the specified performance.
+          In order not to work on the heavy simulation environment every time, we worked on simplified models
+          that we derived using a behavioral approach on the open-loop outputs of the whole system.
+
+          <figure>
+           <img src="img/BE_Drone/BO_x.png" width="400" alt="Simplified model for axis x and y">
+            <img src="img/BE_Drone/BO_z.png" width="400" alt="Simplified model for axis z">
+          </figure>
+
+
+    </br> Once the controllers were calculated, we added them to the simulation environment.
+
+    <figure>
+    <img src="img/BE_Drone/position_control.png" class="image" alt="position_control">
+   </figure>
+
+   <h1> Tests and simulations</h1>
+  For the z-axis, we were able to appreciate the limits of our approximation as the step response slightly differed
+   from the simplified model we used to derive the controller. However, the step response still
+   respected the specifications we were given so the controller was validated.</p>
+
+   <figure>
+   <img src="img/BE_Drone/step_z.png" width="400" alt="step_z">
+    <img src="img/BE_Drone/step_z_model.png" width="400" alt="step_z_model">
+  </figure>
+
+
+  <h1> Waypoints </h1>
+
+  <p> We used Stateflow charts to test the behavior of the drone to a predifined set of waypoints.
+  We connected the output of the stateflow chart to the controller inputs that we just had implemented.
+  Below is a 3D display of the resulting simulation along with a xy display.</p>
+
+ <figure>
+ 	<img src="img/BE_Drone/Simulation.gif" width="400" alt="Drone simulation">
+ 	<img src="img/BE_Drone/xy.jpg" width="400" alt="xy">
+ </figure>
+
+
+   <h1> Pursuit </h1>
+
+  <p>The next step was to implement a fully autonomous chasing-off intruder mission. This mission was divided in
+  finve parts : take-off, tracking, following, home base return, landing.
+  </p>
+
+  <h2> Tracking </h2>
+  <p>For the tracking part, the drone knew the target's position but needed to anticipate the target moves so that
+  he could move accordingly. To perform this task, we used a MDP (Markov Decision Process) approach.</p>
+
+  <h2> Following </h2>
+  Once the drone reaches the target, it enters a new mode where its inputs reference are directly the target's
+  position: this mode was thus similar to the waypoints we implemented earlier.
+
+  <h2> Fully autonomus mission </h2>
+  This last step was to make the mission fully autonomous with the drone entering the different modes automatically, without
+  human intervention.
+
+
+
+
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>
